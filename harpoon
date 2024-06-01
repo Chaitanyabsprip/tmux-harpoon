@@ -37,7 +37,7 @@ view() {
 add() {
     tmux display -p '#{session_name}=#{session_path}' >>"$cachefile"
     awk -i inplace '!seen[$0]++' "$cachefile" # de-duplicate
-    tmux display 'Tracking session #{session_name}'
+    exec tmux display 'Tracking session #{session_name}'
 }
 
 _switch() {
@@ -46,7 +46,7 @@ _switch() {
     if ! sessions_has_match "$name=$path"; then
         tmux new -ds "$name" -c "$path"
     fi
-    tmux switch-client -t "$name"
+    exec tmux switch-client -t "$name"
 }
 
 switch() {
@@ -58,6 +58,10 @@ switch() {
         fi
         count=$((count + 1))
     done <"$cachefile"
+}
+
+edit_file() {
+    exec tmux popup -E "$EDITOR $cachefile"
 }
 
 sessions_has_match() {
@@ -73,13 +77,14 @@ bold() {
 }
 
 main() {
-    while getopts ":har:ls:" opt; do
+    while getopts ":har:ls:e" opt; do
         case "$opt" in
         h | :) help && exit 0 ;;
         a) add ;;
         r) remove "$OPTARG" ;;
         l) view ;;
         s) switch "$OPTARG" ;;
+        e) edit_file ;;
         \?) help && exit 1 ;;
         esac
     done
