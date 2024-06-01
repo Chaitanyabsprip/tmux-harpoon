@@ -40,7 +40,7 @@ add() {
 _switch() {
     name="$1"
     path="$2"
-    if ! { sessions_has_match "$name=$path"; }; then
+    if ! sessions_has_match "$name=$path"; then
         tmux new -ds "$name" -c "$path"
     fi
     tmux switch-client -t "$name"
@@ -58,7 +58,7 @@ switch() {
 }
 
 sessions_has_match() {
-    list_sessions | grep -wq "^$1="
+    list_sessions | grep -wq "^$1"
 }
 
 list_sessions() {
@@ -70,7 +70,7 @@ bold() {
 }
 
 main() {
-    while getopts ":harls" opt; do
+    while getopts ":har:ls:" opt; do
         case "$opt" in
         h | :) help && exit 0 ;;
         a) add ;;
