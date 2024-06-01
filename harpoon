@@ -37,7 +37,6 @@ view() {
 add() {
     tmux display -p '#{session_name}=#{session_path}' >>"$cachefile"
     awk -i inplace '!seen[$0]++' "$cachefile" # de-duplicate
-    cat "$cachefile"
 }
 
 _switch() {
