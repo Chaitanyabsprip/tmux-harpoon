@@ -64,19 +64,14 @@ bold() {
 }
 
 main() {
-    index="$1"
     while getopts ":harls" opt; do
         case "$opt" in
-        h | :)
-            help && exit 0
-            ;;
+        h | :) help && exit 0 ;;
         a) add ;;
         r) remove "$OPTARG" ;;
         l) view ;;
-        s) switch "$1" ;;
-        \?)
-            echo default
-            ;;
+        s) switch "$OPTARG" ;;
+        \?) help && exit 1 ;;
         esac
     done
 }
