@@ -19,7 +19,13 @@ remove() {
 }
 
 view() {
-    entry="$(sed "s/\(.*\)=\(.*\)/$(tput bold)\1$(tput sgr0) \2/;s|$HOME/||" "$cachefile" | align ' ')"
+    entry="$(awk -v home="$HOME" -v bold="$(tput setaf 4)" -v sgr0="$(tput sgr0)" '{
+        split($0, parts, "=")
+        key = parts[1]
+        value = parts[2]
+        sub(home "/", "", value)
+        printf "%s%s%s %s\n", bold, key, sgr0, value
+    }' "$cachefile" | align ' ' | fzf-tmux -p '50%,50%' --ansi)"
     name="$(echo "$entry" | cut -d ' ' -f 1)"
     path="$HOME/$(echo "$entry" | rev | cut -d ' ' -f 1 | rev)"
     _switch "$name" "$path"
