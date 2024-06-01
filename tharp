@@ -1,5 +1,5 @@
 #!/bin/sh
-cachefile="$"
+cachefile="$XDG_CACHE_HOME/.tmux-harpoon-sessions"
 
 help() {
     echo
@@ -28,7 +28,7 @@ view() {
 add() {
     tmux display -p '#{session_name}=#{session_path}' >>"$cachefile"
     awk -i inplace '!seen[$0]++' "$cachefile" # de-duplicate
-    cat .sessions
+    cat "$cachefile"
 }
 
 _switch() {
@@ -48,7 +48,7 @@ switch() {
             _switch "$name" "$path"
         fi
         count=$((count + 1))
-    done <.sessions
+    done <"$cachefile"
 }
 
 sessions_has_match() {
@@ -65,7 +65,6 @@ bold() {
 
 main() {
     index="$1"
-    cachefile=.sessions
     while getopts ":harls" opt; do
         case "$opt" in
         h | :)
