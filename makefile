@@ -1,7 +1,7 @@
 INSTALL_PATH=$(HOME)/.local/bin/harpoon
 
-install: ./tharp
-	@install -C ./tharp $(INSTALL_PATH)
+install: ./harpoon
+	@install -C ./harpoon $(INSTALL_PATH)
 
 uninstall:
 	@rm $(INSTALL_PATH)
