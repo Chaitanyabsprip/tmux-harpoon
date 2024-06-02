@@ -33,6 +33,18 @@ Options:
 
 The index corresponds to the position of the session in the list of tracked sessions.
 
+I have the following snippet in my tmux configuration which integrates harpoon
+with tmux.
+
+```conf
+bind -n M-b run 'harpoon -a'
+bind -n M-v run 'harpoon -l'
+bind -n M-n run 'harpoon -s 1'
+bind -n M-e run 'harpoon -s 2'
+bind -n M-o run 'harpoon -s 3'
+bind -n M-s run 'harpoon -s 4'
+```
+
 ## Example
 
 ```sh
