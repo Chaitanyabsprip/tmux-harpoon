@@ -23,11 +23,11 @@ Usage:
 Options:
     -a                    Track current tmux session
     -r [session_name]     Stop tracking session with session name. If
-                          session_name is not passed then remove
-                          current session
-    -l                    View and jump to tracked sessions
-    -s [index]            Switch to the session at the specified
-                          index in the list of tracked sessions
+                          session_name is not passed then remove current session
+    -l                    List tracked sessions
+    -s [index]            Switch to the session at the specified index in the
+                          list of tracked sessions
+    -e                    Edit the sessions file
     -h                    Display this help message
 ```
 
@@ -39,6 +39,7 @@ with tmux.
 ```conf
 bind -n M-b run 'harpoon -a'
 bind -n M-v run 'harpoon -l'
+bind -n M-i run 'harpoon -e'
 bind -n M-n run 'harpoon -s 1'
 bind -n M-e run 'harpoon -s 2'
 bind -n M-o run 'harpoon -s 3'
@@ -49,17 +50,20 @@ bind -n M-s run 'harpoon -s 4'
 
 ```sh
 # Track the current session
-harpoon.tmux -a
+harpoon -a
 
 # Remove a session by name
-harpoon.tmux -r mysession
+harpoon -r mysession
 
 # List tracked sessions
-harpoon.tmux -l
+harpoon -l
 
 # Switch to the Nth tracked session
-harpoon.tmux -s 1
-harpoon.tmux -s 3
+harpoon -s 1
+harpoon -s 3
+
+# Open harpoon sessions file to reorder and/or manually add/remove session entries
+harpoon -e
 ```
 
 ## Dependencies

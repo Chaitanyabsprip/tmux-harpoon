@@ -23,6 +23,7 @@ help() {
     echo "    -l                    List tracked sessions"
     echo "    -s [index]            Switch to the session at the specified index in the"
     echo "                          list of tracked sessions"
+    echo "    -e                    Edit the sessions file"
     echo "    -h                    Display this help message"
 }
 
