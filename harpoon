@@ -11,7 +11,8 @@ help() {
     echo "                          session_name is not passed then remove"
     echo "                          current session"
     echo "    -l                    List tracked sessions"
-    echo "    -s [index]            Switch to the session at the specified index in the list of tracked sessions"
+    echo "    -s [index]            Switch to the session at the specified"
+    echo "                          index in the list of tracked sessions"
     echo "    -h                    Display this help message"
 }
 
