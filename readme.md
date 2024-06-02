@@ -1,6 +1,6 @@
 # Harpoon.tmux
 
-`harpoon.tmux` is a simple tool to manage your tmux session bookmarks
+`harpoon` is a simple tool to manage your tmux session bookmarks
 efficiently. This tool allows you to track, view, and switch between your tmux
 session bookmarks easily. It provides options to add, remove, and list your
 tracked sessions, making jumping between essential tmux sessions seamless.
