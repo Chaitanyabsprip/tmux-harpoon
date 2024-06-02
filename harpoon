@@ -1,5 +1,16 @@
 #!/bin/sh
-cachefile="$XDG_CACHE_HOME/.tmux-harpoon-sessions"
+
+get_default_cache_dir() {
+    if [ -n "$XDG_CACHE_HOME" ]; then
+        echo "$XDG_CACHE_HOME"
+    elif [ "$(uname)" = "Darwin" ]; then
+        echo "$HOME/Library/Caches"
+    else
+        echo "$HOME/.cache"
+    fi
+}
+
+cachefile="$(get_default_cache_dir)/.tmux-harpoon-sessions"
 
 help() {
     echo
