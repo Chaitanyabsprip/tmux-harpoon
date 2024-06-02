@@ -1,4 +1,4 @@
-INSTALL_PATH=$(HOME)/.local/bin/harpoon
+INSTALL_PATH?=/usr/bin/harpoon
 
 install: ./harpoon
 	@install -m 0555 -C ./harpoon $(INSTALL_PATH)
