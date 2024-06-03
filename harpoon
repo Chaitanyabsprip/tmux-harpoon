@@ -39,7 +39,7 @@ view() {
         value = parts[2]
         sub(home "/", "", value)
         printf "%s%s%s %s\n", bold, key, sgr0, value
-    }' "$cachefile" | align ' ' | fzf-tmux -p '28%,25%' --ansi)"
+    }' "$cachefile" | fzf-tmux -p '28%,25%' --ansi)"
     name="$(echo "$entry" | cut -d ' ' -f 1)"
     path="$HOME/$(echo "$entry" | rev | cut -d ' ' -f 1 | rev)"
     { [ -z "$name" ] || [ -z "$path" ]; } && exit 0
