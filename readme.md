@@ -72,7 +72,7 @@ harpoon -e
 - `fzf`
 - `tput`
 - `awk`
-- `make`
+- `make` (installation)
 
 ## Contribution
 
