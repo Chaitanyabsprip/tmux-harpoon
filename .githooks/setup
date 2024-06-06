@@ -1,0 +1,15 @@
+#!/bin/sh
+
+script_name=$(basename "$0")
+if ! repo_root=$(git rev-parse --show-toplevel); then
+    echo "Not a git repository (or any of the parent directories)."
+    exit 1
+fi
+cd "$repo_root" || exit
+hooks_dir=".git/hooks"
+for path in .githooks/*; do
+    file="$(basename "$path")"
+    if [ "$file" = "$script_name" ] || [ ! -f "$path" ]; then continue; fi
+    ln -sf "$path" "$hooks_dir/$file"
+    echo "Installed $file to $hooks_dir/$file"
+done
