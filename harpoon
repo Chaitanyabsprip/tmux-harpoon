@@ -18,6 +18,7 @@ help() {
     echo "    ${0##*/} [options] [args]"
     echo "Options:"
     echo "    -a                    Track current tmux session"
+    echo "    -A                    Track pane within current tmux session"
     echo "    -r [session_name]     Stop tracking session with session name. If"
     echo "                          session_name is not passed then remove current session"
     echo "    -l                    List tracked sessions"

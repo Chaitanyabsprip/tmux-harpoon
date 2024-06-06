@@ -22,6 +22,7 @@ Usage:
     harpoon [options] [args]
 Options:
     -a                    Track current tmux session
+    -A                    Track pane within current tmux session
     -r [session_name]     Stop tracking session with session name. If
                           session_name is not passed then remove current session
     -l                    List tracked sessions
@@ -38,6 +39,7 @@ with tmux.
 
 ```conf
 bind -n M-b run 'harpoon -a'
+bind -n .   run 'harpoon -A'
 bind -n M-v run 'harpoon -l'
 bind -n M-i run 'harpoon -e'
 bind -n M-n run 'harpoon -s 1'
