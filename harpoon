@@ -54,8 +54,7 @@ _getBookmark() {
 
     base_info='#{session_name}=#{session_path}'
     pane_info=':#{window_index}.#{pane_index}'
-    bookmark=$(tmux display -p "$base_info$([ "$extended" = true ] && echo "$pane_info")")
-    echo "$bookmark"
+    echo tmux display -p "$base_info$([ "$extended" = true ] && echo "$pane_info")"
 }
 
 _dedupe() {
