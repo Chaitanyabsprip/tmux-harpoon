@@ -23,6 +23,8 @@ Usage:
 Options:
     -a                    Track current tmux session
     -A                    Track pane within current tmux session
+    -o [index]            Overwrite tracked index with current session in tmux session
+    -O [index]            Overwrite tracked index with current pane in tmux session
     -r [session_name]     Stop tracking session with session name. If
                           session_name is not passed then remove current session
     -l                    List tracked sessions
@@ -47,6 +49,24 @@ bind -n M-e run 'harpoon -s 2'
 bind -n M-o run 'harpoon -s 3'
 bind -n M-s run 'harpoon -s 4'
 ```
+
+To map panes or session to a specific index, use the -o/O flag:
+
+```conf
+bind -n M-q run 'harpoon -s 1'  # alt-q goes to index 1
+bind M-q run 'harpoon -O 1'     # prefix+alt+q adds pane to index 1
+
+bind -n M-w run 'harpoon -s 2'
+bind M-w run 'harpoon -O 2'
+
+... etc
+```
+
+The above config will essentially let you map panes to your keybindings, so that pressing
+your bind for a given index will take you to the marked pane, and pressing prefix + your bind 
+will mark the current pane to your keybind.
+
+If there is no pane/session in the given index, it will be appended to the list instead.
 
 ## Example
 
