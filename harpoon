@@ -61,7 +61,7 @@ _dedupe() {
     awk -i inplace '!seen[$0]++' "$cachefile" # de-duplicate
 }
 
-overwrite() {
+replace() {
     bookmark=$(_getBookmark "$1")
     index=$2
 
@@ -124,8 +124,8 @@ main() {
         h | :) help && exit 0 ;;
         a) add false ;;
         A) add true ;;
-        r) overwrite false "$OPTARG" ;;
-        R) overwrite true "$OPTARG" ;;
+        r) replace false "$OPTARG" ;;
+        R) replace true "$OPTARG" ;;
         d) remove "$OPTARG" ;;
         l) view ;;
         s) switch "$OPTARG" ;;
