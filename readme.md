@@ -9,7 +9,7 @@ tracked sessions, making jumping between essential tmux sessions seamless.
 
 1. Clone this repository.
 2. Run make command to install, optionally you can install in a custom location
-by setting `INSTALL_PATH` environment variable when calling make.
+   by setting `INSTALL_PATH` environment variable when calling make.
 
    ```sh
    sudo make install
@@ -23,12 +23,12 @@ Usage:
 Options:
     -a                    Track current tmux session
     -A                    Track pane within current tmux session
-    -r [index]            Replace tracked entry at index with current session
-    -R [index]            Replace tracked entry at index with current pane within session
+    -r <index>            Replace tracked entry at index with current session
+    -R <index>            Replace tracked entry at index with current pane within session
     -d [session_name]     Stop tracking session with session name. If
                           session_name is not passed then remove current session
     -l                    List tracked sessions
-    -s [index]            Switch to the session at the specified index in the
+    -s <index>            Switch to the session at the specified index in the
                           list of tracked sessions
     -e                    Edit the sessions file
     -h                    Display this help message
@@ -44,34 +44,42 @@ bind -n M-b run 'harpoon -a'
 bind -n .   run 'harpoon -A'
 bind -n M-v run 'harpoon -l'
 bind -n M-i run 'harpoon -e'
-bind -n M-q run 'harpoon -s 1'  # alt+q goes to index 1
-bind M-q run 'harpoon -r 1'     # prefix alt+q replace entry index 1 with current session
-bind -n M-w run 'harpoon -s 2'
-bind M-w run 'harpoon -R 2'     # replace entry at index 2 with current pane within session
+bind -n M-q run 'harpoon -s 1'  # jump to bookmark at index 1
+bind    M-q run 'harpoon -r 1'  # replace entry at index 1 with current session
+bind -n M-w run 'harpoon -s 2'  # jump to bookmark at index 2
+bind    M-w run 'harpoon -R 2'  # replace entry at index 2 with current pane within session
 bind -n M-e run 'harpoon -s 3'
 bind -n M-r run 'harpoon -s 4'
 
-# Note: If there is no entry at the given index, it is appended to the list instead.# adds pane instead of session to index 2
+# Note: When replcaing, if there is no entry at the given index, it is appended to the list instead.
 ```
 
 ## Example
 
 ```sh
-# Track the current session
-harpoon -a
+# Track session
+harpoon -a # Track the current tmux session
+harpoon -A # Track pane within the current tmux session
 
-# Remove a session by name
-harpoon -r mysession
+harpoon -r 2 # Replace the tracked entry at index 2 with the current session
+harpoon -R 3 # Replace the tracked entry at index 3 with the current pane within the session
 
-# List tracked sessions
+# Stop tracking session
+harpoon -d my_session # Stop tracking named session
+harpoon -d # Stop tracking the current session
+
+# List all tracked sessions
 harpoon -l
 
-# Switch to the Nth tracked session
-harpoon -s 1
-harpoon -s 3
+# Jump to session
+harpoon -s 1 # Switch to the session at index 1 in the list of tracked sessions
+harpoon -s 4
 
-# Open harpoon sessions file to reorder and/or manually add/remove session entries
+# Edit the sessions file
 harpoon -e
+
+# Display the help message
+harpoon -h
 ```
 
 ## Dependencies
