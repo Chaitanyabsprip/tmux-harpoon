@@ -44,18 +44,14 @@ bind -n M-b run 'harpoon -a'
 bind -n .   run 'harpoon -A'
 bind -n M-v run 'harpoon -l'
 bind -n M-i run 'harpoon -e'
-bind -n M-q run 'harpoon -s 1'
+bind -n M-q run 'harpoon -s 1'  # alt+q goes to index 1
+bind M-q run 'harpoon -r 1'     # prefix alt+q replace entry index 1 with current session
 bind -n M-w run 'harpoon -s 2'
+bind M-w run 'harpoon -R 2'     # replace entry at index 2 with current pane within session
 bind -n M-e run 'harpoon -s 3'
 bind -n M-r run 'harpoon -s 4'
 
-# Map panes or sessions to specific by replacing entires
-# If there is no pane/session in the given index, it will be appended to the list instead.
-bind -n M-q run 'harpoon -s 1'  # alt+q goes to index 1
-bind M-q run 'harpoon -r 1'     # prefix+alt+q adds pane to index 1
-
-bind -n M-w run 'harpoon -s 2'  
-bind M-w run 'harpoon -R 2'     # adds session instead of pane to index 2
+# Note: If there is no entry at the given index, it is appended to the list instead.# adds pane instead of session to index 2
 ```
 
 ## Example
