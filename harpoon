@@ -1,113 +1,111 @@
 #!/bin/sh
 
 get_default_cache_dir() {
-    if [ -n "$XDG_CACHE_HOME" ]; then
-        echo "$XDG_CACHE_HOME"
-    elif [ "$(uname)" = "Darwin" ]; then
-        echo "$HOME/Library/Caches"
-    else
-        echo "$HOME/.cache"
-    fi
+	if [ -n "$XDG_CACHE_HOME" ]; then
+		echo "$XDG_CACHE_HOME"
+	elif [ "$(uname)" = "Darwin" ]; then
+		echo "$HOME/Library/Caches"
+	else
+		echo "$HOME/.cache"
+	fi
 }
 
 cachefile="$(get_default_cache_dir)/.tmux-harpoon-sessions"
 
 help() {
-    echo
-    echo "Usage:"
-    echo "    ${0##*/} [options] [args]"
-    echo "Options:"
-    echo "    -a                    Track current tmux session"
-    echo "    -A                    Track pane within current tmux session"
-    echo "    -r <index>            Replace tracked entry at index with current session"
-    echo "    -R <index>            Replace tracked entry at index with current pane within session"
-    echo "    -d [session_name]     Stop tracking session with session name. If"
-    echo "                          session_name is not passed then remove current session"
-    echo "    -l                    List tracked sessions"
-    echo "    -s <index>            Switch to the session at the specified index in the"
-    echo "                          list of tracked sessions"
-    echo "    -e                    Edit the sessions file"
-    echo "    -h                    Display this help message"
+	echo
+	echo "Usage:"
+	echo "    ${0##*/} [options] [args]"
+	echo "Options:"
+	echo "    -a                    Track current tmux session"
+	echo "    -A                    Track pane within current tmux session"
+	echo "    -r <index>            Replace tracked entry at index with current session"
+	echo "    -R <index>            Replace tracked entry at index with current pane within session"
+	echo "    -d [session_name]     Stop tracking session with session name. If"
+	echo "                          session_name is not passed then remove current session"
+	echo "    -l                    List tracked sessions"
+	echo "    -s <index>            Switch to the session at the specified index in the"
+	echo "                          list of tracked sessions"
+	echo "    -e                    Edit the sessions file"
+	echo "    -h                    Display this help message"
 }
 
 remove() {
-    session_name="$1"
-    sed -i "/^$session_name/d" "$cachefile"
+	session_name="$1"
+	sed -i "/^$session_name/d" "$cachefile"
 }
 
 view() {
-    entry="$(awk -v home="$HOME" -v bold="$(tput setaf 4)" -v sgr0="$(tput sgr0)" '{
+	entry="$(awk -v home="$HOME" -v bold="$(tput setaf 4)" -v sgr0="$(tput sgr0)" '{
         split($0, parts, "=")
         key = parts[1]
         value = parts[2]
         sub(home "/", "", value)
         printf "%s%s%s %s\n", bold, key, sgr0, value
     }' "$cachefile" | fzf-tmux -p '50%,50%' --ansi)"
-    name="$(echo "$entry" | cut -d ' ' -f 1)"
-    path="$HOME/$(echo "$entry" | rev | cut -d ' ' -f 1 | rev)"
-    { [ -z "$name" ] || [ -z "$path" ]; } && exit 0
-    _switch "$name" "$path"
+	name="$(echo "$entry" | cut -d ' ' -f 1)"
+	path="$HOME/$(echo "$entry" | rev | cut -d ' ' -f 1 | rev)"
+	{ [ -z "$name" ] || [ -z "$path" ]; } && exit 0
+	_switch "$name" "$path"
 }
 
 _getBookmark() {
-    extended=$1
+	extended=$1
 
-    base_info='#{session_name}=#{session_path}'
-    pane_info=':#{window_index}.#{pane_index}'
-    tmux display -p "$base_info$([ "$extended" = true ] && echo "$pane_info")"
+	base_info='#{session_name}=#{session_path}'
+	pane_info=':#{window_index}.#{pane_index}'
+	tmux display -p "$base_info$([ "$extended" = true ] && echo "$pane_info")"
 }
 
-_dedupe() {
-    awk -i inplace '!seen[$0]++' "$cachefile" # de-duplicate
-}
+_dedupe() { command cat -n "$cachefile" | sort -uk2 | sort -n | cut -f2-; }
 
 replace() {
-    bookmark=$(_getBookmark "$1")
-    index=$2
+	bookmark=$(_getBookmark "$1")
+	index=$2
 
-    linenumbers=$(wc -l <"$cachefile")
-    if [ "$linenumbers" -ge "$index" ]; then
-        escaped_bookmark=$(echo "$bookmark" | sed 's/\//\\\//g')
-        sed -i "${index}s/.*/$escaped_bookmark/" "$cachefile"
-    else
-        echo "$bookmark" >>"$cachefile"
-    fi
+	linenumbers=$(wc -l <"$cachefile")
+	if [ "$linenumbers" -ge "$index" ]; then
+		escaped_bookmark=$(echo "$bookmark" | sed 's/\//\\\//g')
+		sed -i "${index}s/.*/$escaped_bookmark/" "$cachefile"
+	else
+		echo "$bookmark" >>"$cachefile"
+	fi
 
-    _dedupe
-    exec tmux display "Tracking session #{session_name} in index $index"
+	_dedupe
+	exec tmux display "Tracking session #{session_name} in index $index"
 }
 
 add() {
-    bookmark=$(_getBookmark "$1")
+	bookmark=$(_getBookmark "$1")
 
-    echo "$bookmark" >>"$cachefile"
-    _dedupe
-    exec tmux display 'Tracking session #{session_name}'
+	echo "$bookmark" >>"$cachefile"
+	_dedupe
+	exec tmux display 'Tracking session #{session_name}'
 }
 
 _switch() {
-    name="$1"
-    path="$2"
-    dirpath="${path%%:*}"
-    pane="${path#*:}"
-    [ "$dirpath" = "$pane" ] && pane=""
-    if ! sessions_has_match "$name=$dirpath"; then
-        if [ "$(uname)" = "Darwin" ]; then sedi="sed -i ''"; else sedi="sed -i"; fi
-        $sedi "s|^$name=.*|$name=$dirpath:1.1|" "$cachefile"
-        tmux new -ds "$name" -c "$dirpath"
-    fi
-    exec tmux switch-client -t "$name:$pane"
+	name="$1"
+	path="$2"
+	dirpath="${path%%:*}"
+	pane="${path#*:}"
+	[ "$dirpath" = "$pane" ] && pane=""
+	if ! sessions_has_match "$name=$dirpath"; then
+		if [ "$(uname)" = "Darwin" ]; then sedi="sed -i ''"; else sedi="sed -i"; fi
+		$sedi "s|^$name=.*|$name=$dirpath:1.1|" "$cachefile"
+		tmux new -ds "$name" -c "$dirpath"
+	fi
+	exec tmux switch-client -t "$name:$pane"
 }
 
 switch() {
-    index="$1"
-    count=1
-    while IFS='=' read -r name path; do
-        if [ "$count" = "$index" ]; then
-            _switch "$name" "$path"
-        fi
-        count=$((count + 1))
-    done <"$cachefile"
+	index="$1"
+	count=1
+	while IFS='=' read -r name path; do
+		if [ "$count" = "$index" ]; then
+			_switch "$name" "$path"
+		fi
+		count=$((count + 1))
+	done <"$cachefile"
 }
 
 edit_file() { exec tmux popup -E "$EDITOR $cachefile"; }
@@ -119,20 +117,20 @@ list_sessions() { tmux ls -F '#{session_name}=#{session_path}'; }
 bold() { printf "\033[1m%s\033[0m\n" "$*"; }
 
 main() {
-    while getopts ":haAr:R:d:ls:e" opt; do
-        case "$opt" in
-        h | :) help && exit 0 ;;
-        a) add false ;;
-        A) add true ;;
-        r) replace false "$OPTARG" ;;
-        R) replace true "$OPTARG" ;;
-        d) remove "$OPTARG" ;;
-        l) view ;;
-        s) switch "$OPTARG" ;;
-        e) edit_file ;;
-        \?) help && exit 1 ;;
-        esac
-    done
+	while getopts ":haAr:R:d:ls:e" opt; do
+		case "$opt" in
+		h | :) help && exit 0 ;;
+		a) add false ;;
+		A) add true ;;
+		r) replace false "$OPTARG" ;;
+		R) replace true "$OPTARG" ;;
+		d) remove "$OPTARG" ;;
+		l) view ;;
+		s) switch "$OPTARG" ;;
+		e) edit_file ;;
+		\?) help && exit 1 ;;
+		esac
+	done
 }
 
 main "$@"
