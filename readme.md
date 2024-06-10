@@ -23,7 +23,9 @@ Usage:
 Options:
     -a                    Track current tmux session
     -A                    Track pane within current tmux session
-    -r [session_name]     Stop tracking session with session name. If
+    -r [index]            Replace tracked entry at index with current session
+    -R [index]            Replace tracked entry at index with current pane within session
+    -d [session_name]     Stop tracking session with session name. If
                           session_name is not passed then remove current session
     -l                    List tracked sessions
     -s [index]            Switch to the session at the specified index in the
@@ -42,10 +44,14 @@ bind -n M-b run 'harpoon -a'
 bind -n .   run 'harpoon -A'
 bind -n M-v run 'harpoon -l'
 bind -n M-i run 'harpoon -e'
-bind -n M-n run 'harpoon -s 1'
-bind -n M-e run 'harpoon -s 2'
-bind -n M-o run 'harpoon -s 3'
-bind -n M-s run 'harpoon -s 4'
+bind -n M-q run 'harpoon -s 1'  # alt+q goes to index 1
+bind M-q run 'harpoon -r 1'     # prefix alt+q replace entry index 1 with current session
+bind -n M-w run 'harpoon -s 2'
+bind M-w run 'harpoon -R 2'     # replace entry at index 2 with current pane within session
+bind -n M-e run 'harpoon -s 3'
+bind -n M-r run 'harpoon -s 4'
+
+# Note: If there is no entry at the given index, it is appended to the list instead.# adds pane instead of session to index 2
 ```
 
 ## Example
