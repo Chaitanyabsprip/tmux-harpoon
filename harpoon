@@ -36,17 +36,37 @@ remove() {
 }
 
 view() {
+	FZF_CMD="$(_getFZFCmd)"
 	entry="$(awk -v home="$HOME" -v bold="$(tput setaf 4)" -v sgr0="$(tput sgr0)" '{
         split($0, parts, "=")
         key = parts[1]
         value = parts[2]
         sub(home "/", "", value)
         printf "%s%s%s %s\n", bold, key, sgr0, value
-    }' "$cachefile" | fzf-tmux -p '50%,50%' --ansi)"
+    }' "$cachefile" | $FZF_CMD --ansi)"
 	name="$(echo "$entry" | cut -d ' ' -f 1)"
 	path="$HOME/$(echo "$entry" | rev | cut -d ' ' -f 1 | rev)"
 	{ [ -z "$name" ] || [ -z "$path" ]; } && exit 0
 	_switch "$name" "$path"
+}
+
+_getFZFCmd() {
+	! type fzf >/dev/null 2>&1 && echo "Harpoon depends on fzf" && exit 1
+	FZF_VERSION=$(fzf --version | cut -d ' ' -f1)
+	REQUIRED_VERSION="0.53.0"
+
+	version_gt() { [ "$(printf '%s\n' "$@" | sort -V | head -n1)" != "$1" ] || [ "$1" = "$2" ]; }
+
+	if version_gt "$FZF_VERSION" "$REQUIRED_VERSION"; then
+		echo "fzf --tmux 50%"
+		return 0
+	fi
+	if type fzf-tmux >/dev/null 2>&1; then
+		echo "fzf-tmux -p '50%,50%'"
+		return 0
+	fi
+	echo "fzf"
+	return 0
 }
 
 _getBookmark() {
