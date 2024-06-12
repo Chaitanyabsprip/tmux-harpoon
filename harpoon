@@ -137,6 +137,7 @@ list_sessions() { tmux ls -F '#{session_name}=#{session_path}'; }
 bold() { printf "\033[1m%s\033[0m\n" "$*"; }
 
 main() {
+	! [ -f "$cachefile" ] && touch "$cachefile"
 	while getopts ":haAr:R:d:ls:e" opt; do
 		case "$opt" in
 		h | :) help && exit 0 ;;
