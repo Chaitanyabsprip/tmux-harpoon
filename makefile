@@ -11,7 +11,7 @@ uninstall:
 
 test: | test/.ran-build-docker
 	@docker run -h $(IMAGE_NAME) --name $(IMAGE_NAME) $(IMAGE_NAME)
-	@docker rm $(IMAGE_NAME)
+	@docker rm $(IMAGE_NAME) >/dev/null
 
 test/.ran-build-docker: test/Dockerfile harpoon test/driver.sh
 	@$(MAKE) -- --clean >/dev/null
