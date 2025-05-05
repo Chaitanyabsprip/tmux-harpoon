@@ -39,7 +39,7 @@ Then reload tmux and press `prefix + I` to install.
 Clone this repository and run:
 
 ```sh
-git clone https://github.com/yourusername/tmux-harpoon.git
+git clone https://github.com/Chaitanyabsprip/tmux-harpoon.git
 cd tmux-harpoon
 sudo make install
 # or specify a custom path:
