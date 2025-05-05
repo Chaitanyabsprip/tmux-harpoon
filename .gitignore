@@ -1,1 +1,3 @@
 .test_sessions
+test/.ran-build-docker
+test/.ran-docker
