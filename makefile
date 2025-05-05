@@ -18,6 +18,13 @@ test/.ran-build-docker: test/Dockerfile harpoon test/driver.sh
 	@docker build -t $(IMAGE_NAME) -f test/Dockerfile .
 	@touch $@
 
+help:
+	@echo "📦 Available make targets:"
+	@echo "  make install     Install harpoon to $(INSTALL_PATH)"
+	@echo "  make uninstall   Remove harpoon from $(INSTALL_PATH)"
+	@echo "  make test        Run tests inside Docker"
+	@echo "  make help        Show this help message"
+
 --clean:
 	@docker ps -a --format '{{.Image}}' | grep -w "$(IMAGE_NAME)" \
 		| xargs -I {} docker rm {} >/dev/null 2>&1 || :;
