@@ -115,3 +115,9 @@ MIT
 
 🪝 Built with love for a smoother tmux experience. Try it, star it, and open a
 PR if you’ve got something cool!
+
+## Contribution
+
+Contributions are welcome! If you find a bug or have a feature request, please
+open an issue. If you would like to contribute code, please fork the repository
+and submit a pull request.
